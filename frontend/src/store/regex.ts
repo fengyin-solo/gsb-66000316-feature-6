@@ -294,8 +294,9 @@ export function computeNFA(nfaResult: ReturnType<typeof buildNFA>): NFA {
     x: 0, y: 0
   }))
 
-  // Layout: circular
-  const cx = 400, cy = 300, radius = 200
+  // Layout: circular, radius scales with node count to avoid overlap
+  const cx = 400, cy = 300
+  const radius = Math.max(200, nodes.length * 8)
   nodes.forEach((n, i) => {
     const angle = (i / nodes.length) * Math.PI * 2
     n.x = cx + Math.cos(angle) * radius
