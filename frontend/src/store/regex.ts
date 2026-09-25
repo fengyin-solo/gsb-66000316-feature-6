@@ -255,7 +255,7 @@ function runMatch(states: StateNode[], startState: number, input: string): Match
           stepIndex: stepIndex++,
           charIndex: i,
           char,
-          currentState: currentStates[0] || -1,
+          currentState: currentStates.length ? currentStates[0] : -1,
           nextState: -1,
           transition: 'FAIL',
           isBacktrack: true,
@@ -294,8 +294,10 @@ export function computeNFA(nfaResult: ReturnType<typeof buildNFA>): NFA {
     x: 0, y: 0
   }))
 
-  // Layout: circular
-  const cx = 400, cy = 300, radius = 200
+  // Layout: circular — radius grows with node count so nodes keep a minimum
+  // arc spacing and do not overlap on large automata
+  const cx = 400, cy = 300
+  const radius = Math.max(200, (nodes.length * 48) / (Math.PI * 2))
   nodes.forEach((n, i) => {
     const angle = (i / nodes.length) * Math.PI * 2
     n.x = cx + Math.cos(angle) * radius
